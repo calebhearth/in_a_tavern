@@ -4,6 +4,16 @@ module InATavern
     #
     # @return InATavern actor
     attr_accessor :actor
+
+    attr_writer :profile_path
+
+    # The InATavern profile_path is the profile path of the actor.
+    #
+    # Defaults to a slash followed by the configured `actor` value.
+    # @return InATavern profile_path
+    def profile_path
+      @profile_path || "/#{@actor}"
+    end
   end
 
   # @return [InATavern::Configuration] InATavern's current config

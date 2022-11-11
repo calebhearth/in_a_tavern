@@ -5,10 +5,9 @@ module InATavern
         head :bad_request
         return
       end
-      if params[:resource] == "acct:#{InATavern.config.actor}@#{request.host}"
-        head :ok
-      else
+      if params[:resource] != "acct:#{InATavern.config.actor}@#{request.host}"
         head :not_found
+        return
       end
     end
   end

@@ -18,10 +18,15 @@ module InATavern
 
     test "show returns actor when correctly requested" do
       InATavern.config.actor = "conan"
+      resource = "acct:conan@www.example.com"
 
-      get webfinger_path(resource: "acct:#{InATavern.config.actor}@www.example.com")
+      get webfinger_path(resource:)
 
       assert_response :success
+      json = JSON.parse(response.body)
+      assert_equal resource, json["subject"]
+      assert_equal ["https://www.example.com/conan"], json["aliases"]
+      assert json.key?("links")
     end
   end
 end
