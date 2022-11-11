@@ -1,0 +1,16 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/activitystreams",
+    "https://w3id.org/security/v1"
+  ],
+  "id": "<%= actor_url protocol: :https %>",
+  "type": "Person",
+  "preferredUsername": "<%= InATavern.config.actor %>",
+  "inbox": "<%= inbox_url protocol: :https %>",
+
+  "publicKey": {
+    "id": "https://<%= request.host %><%= InATavern.config.profile_path %>#main-key",
+    "owner": "<%= actor_url protocol: :https %>",
+    "publicKeyPem": "<%= File.read(Rails.root.join("public.pem")).gsub(/\n/, "\\n") %>"
+  }
+}
