@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches: main
+  pull_request:
+    branches: "*"
+
+jobs:
+  build:
+    name: Ruby ${{ matrix.ruby }}, Rails ${{ matrix.rails }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby: ["3.1", "head"]
+        rails: ["7.0", "main"]
+
+    runs-on: ubuntu-latest
+
+    env:
+      RAILS_VERSION: ${{ matrix.rails }}
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Ruby ${{ matrix.ruby }}
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+
+      - name: Install dependent libraries
+        run: sudo apt-get install libpq-dev
+
+      - name: Generate lockfile
+        run: bundle lock
+
+      - name: Load cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: vendor/bundle
+          key: bundle-${{ hashFiles('Gemfile.lock') }}
+
+      - name: Install dependencies
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Generate certificates
+        run: |
+          openssl genrsa -out test/dummy/private.pem 2048
+          openssl rsa -in test/dummy/private.pem -outform PEM -pubout -out test/dummy/public.pem
+
+      - name: Run tests
+        run: bundle exec rails test

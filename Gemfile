@@ -1,12 +1,16 @@
 source "https://rubygems.org"
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) { |repo| "https://github.com/#{repo}" }
 
 # Specify your gem's dependencies in in_a_tavern.gemspec.
 gemspec
 
-gem "pg"
-
+gem "sqlite3"
 gem "sprockets-rails"
-
-# Start debugger with binding.b [https://github.com/ruby/debug]
-# gem "debug", ">= 1.0.0"
+if (rails_version = ENV["RAILS_VERSION"])
+  case rails_version
+  when "main"
+    gem "rails", github: "rails/rails"
+  else
+    gem "rails", "~> #{rails_version}.0"
+  end
+end
