@@ -26,7 +26,8 @@ module InATavern
       json = JSON.parse(response.body)
       assert_equal resource, json["subject"]
       assert_equal ["https://www.example.com/conan"], json["aliases"]
-      assert json.key?("links")
+      assert_equal actor_url,
+        json["links"].find { |link| link["rel"] == "self" }["href"]
     end
   end
 end
