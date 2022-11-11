@@ -1,3 +1,4 @@
+require "in_a_tavern/configuration"
 require "in_a_tavern/version"
 require "in_a_tavern/engine"
 
