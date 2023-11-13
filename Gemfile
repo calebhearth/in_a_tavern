@@ -6,11 +6,12 @@ gemspec
 
 gem "sqlite3"
 gem "sprockets-rails"
+gem "rails"
 if (rails_version = ENV["RAILS_VERSION"])
   case rails_version
   when "main"
-    gem "rails", github: "rails/rails"
+    gem "actionpack", github: "rails/rails"
   else
-    gem "rails", "~> #{rails_version}.0"
+    gem "actionpack", "~> #{rails_version}.0"
   end
 end
